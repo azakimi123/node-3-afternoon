@@ -1,8 +1,10 @@
 module.exports = {
     create: (req, res) => {
-        const db = req.app.get('db');
+        const db = req.app.get('db'),
+              {name, description, price, image_url} = req.body;
+             
 
-        db.create_products()
+        db.create_product({name, description, price, image_url})
         .then(() => res.sendStatus(200))
         .catch( err => {
             res.status(500).send({errorMessage: 'Something went wrong, we apologize for the inconvenience'});
@@ -11,10 +13,11 @@ module.exports = {
     },
 
     getOne: (req, res) => {
-        const db = req.app.get('db');
+        const db = req.app.get('db'),
+              {id} = req.params;
 
         db.read_product({id})
-        .then((product) => res.status(200).send(product))
+        .then(product => res.status(200).send(product))
         .catch( err => {
             res.status(500).send({errorMessage:'Something went wrong, we apologize for the inconvenience'});
             console.log(err)
@@ -26,7 +29,7 @@ module.exports = {
         const db = req.app.get('db');
 
         db.read_products()
-        .then((products) => res.sendStatus(200).send(products))
+        .then(products => res.status(200).send(products))
         .catch( err => {
             res.status(500).send({errorMessage: 'Something went wrong, we apologize for the inconvenience'});
             console.log(err)
@@ -35,9 +38,11 @@ module.exports = {
     },
 
     update: (req, res) => {
-        const db = req.app.get('db');
+        const db = req.app.get('db'),
+              {id} = req.params,
+              {description} = req.body;
 
-        db.update_product()
+        db.update_product({description, id})
         .then(() => res.sendStatus(200))
         .catch( err => {
             res.status(500).send({errorMessage:'Something went wrong, we apologize for the inconvenience' });
@@ -47,9 +52,10 @@ module.exports = {
     },
 
     delete: (req, res) => {
-        const db = req.app.get('db');
+        const db = req.app.get('db'),
+              {id} = req.params;
 
-        db.delete_product()
+        db.delete_product({id})
         .then(() => res.sendStatus(200))
         .catch( err => {
             res.status(500).send({errorMessage: 'Something has gone wrong, we apologize for the inconvenience'});
