@@ -37,19 +37,20 @@ module.exports = {
 
     },
 
-    update: (req, res) => {
-        const db = req.app.get('db'),
-              {id} = req.params,
-              {description} = req.body;
-
-        db.update_product({description, id})
-        .then(() => res.sendStatus(200))
-        .catch( err => {
-            res.status(500).send({errorMessage:'Something went wrong, we apologize for the inconvenience' });
+    update: ( req, res, next ) => {
+        const dbInstance = req.app.get('db');
+        const {id} = req.params;
+        const {desc} = req.query;
+        console.log(id)
+        console.log(desc)
+    
+        dbInstance.update_product({id, desc })
+          .then( () => res.sendStatus(200) )
+          .catch( err => {
+            res.status(500).send({errorMessage: 'Something has gone wrong, we apologize for the inconvenience'});
             console.log(err)
-        });
-
-    },
+          } );
+      },
 
     delete: (req, res) => {
         const db = req.app.get('db'),
